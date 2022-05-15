@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	View,
 	Text,
 	StyleSheet,
-	SafeAreaView,
 	TextInput,
 	Platform,
-	TouchableOpacity,
+	FlatList,
 } from 'react-native';
+import { Button } from '../components/Button';
+import { SkillCard } from '../components/SkillCard';
 
 export function Home() {
+	const [newSkill, setNewSkill] = useState('');
+	const [mySkills, setMySkills] = useState([]);
+
+	function handleAddNewSkill() {
+		setMySkills(c => [...c, newSkill]);
+		setNewSkill('');
+	}
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Welcome, Higor</Text>
@@ -18,13 +27,18 @@ export function Home() {
 				style={styles.input}
 				placeholder="New Skills"
 				placeholderTextColor={'#555'}
+				onChangeText={setNewSkill}
 			/>
 
-			<TouchableOpacity style={styles.button} activeOpacity={0.8}>
-				<Text style={styles.buttonText}>Add</Text>
-			</TouchableOpacity>
+			<Button handleAddNewSkill={handleAddNewSkill} />
 
-			<Text style={[styles.title, { marginTop: 50 }]}>My Skills</Text>
+			<Text style={[styles.title, { marginVertical: 50 }]}>My Skills</Text>
+
+			<FlatList
+				data={mySkills}
+				keyExtractor={item => item}
+				renderItem={({ item }) => <SkillCard skill={item} />}
+			/>
 		</View>
 	);
 }
@@ -48,17 +62,5 @@ const styles = StyleSheet.create({
 		padding: Platform.OS === 'ios' ? 15 : 10,
 		marginTop: 30,
 		borderRadius: 7,
-	},
-	button: {
-		backgroundColor: '#a370f7',
-		padding: 15,
-		borderRadius: 7,
-		alignItems: 'center',
-		marginTop: 20,
-	},
-	buttonText: {
-		color: '#fff',
-		fontSize: 17,
-		fontWeight: 'bold',
 	},
 });
