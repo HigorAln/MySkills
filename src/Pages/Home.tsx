@@ -28,6 +28,10 @@ export function Home() {
 		setNewSkill('');
 	}
 
+  function handleRemoveSkill(id: string){
+    setMySkills(oldState => oldState.filter(skill => skill.id !== id))
+  }
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Welcome, Higor</Text>
@@ -35,18 +39,22 @@ export function Home() {
 			<TextInput
 				style={styles.input}
 				placeholder="New Skills"
+        value={newSkill}
 				placeholderTextColor={'#555'}
 				onChangeText={setNewSkill}
 			/>
 
-			<Button handleAddNewSkill={handleAddNewSkill} />
+			<Button 
+        onPress={handleAddNewSkill}
+        title="Add"
+      />
 
 			<Text style={[styles.title, { marginVertical: 50 }]}>My Skills</Text>
 
 			<FlatList
 				data={mySkills}
 				keyExtractor={item => item.id}
-				renderItem={({ item }) => <SkillCard skill={item.name} />}
+				renderItem={({ item }) => <SkillCard skill={item.name} onPress={() => handleRemoveSkill(item.id)} />}
 			/>
 		</View>
 	);
